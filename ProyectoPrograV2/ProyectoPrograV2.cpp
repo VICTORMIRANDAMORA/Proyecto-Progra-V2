@@ -1,3 +1,5 @@
+#include<iostream>
+#include<stdio.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -6,6 +8,7 @@ using namespace sf;
 //dos botones menu principal: insercion (insertar una ruta) y edicion (editar una ruta)
 //cuatro botones menu insercion: crear ruta, crear punto, paleta de colores y tal vez uno para regresar al menu anterior
 //para botones de edición se ocuparían rutas ya hechas, una vez hayan rutas hechas, dos botones, para ruta y para punto (mayormente para borrar, al seleccionar se subraya de otro color)
+//no sean sapos xd  jodase
 
 int main()
 {
@@ -23,11 +26,14 @@ int main()
     RectangleShape edition(Vector2f(300, 50));
     edition.setPosition(750, 390);
 
-    RectangleShape subInsertion(Vector2f(300, 50));
-    subInsertion.setPosition(750, 330);
+    RectangleShape subInsertion(Vector2f(170, 50));
+    subInsertion.setPosition(725, 280);
 
-    RectangleShape subInsertion1(Vector2f(300, 50));
-    subInsertion1.setPosition(750, 390);
+    RectangleShape subInsertion1(Vector2f(170, 50));
+    subInsertion1.setPosition(905, 280);
+
+    RectangleShape sub1Insertion1(Vector2f(300, 100));
+    sub1Insertion1.setPosition(750, 330);
 
     RectangleShape subEdition(Vector2f(300, 50));
     subEdition.setPosition(750, 330);
@@ -47,6 +53,8 @@ int main()
     bool buttonMenu = true;
     bool buttonInsertion = false;
     bool buttonEdition = false;
+    bool subMenuInsertion = false;
+    bool subMenuInsertion1 = false;
 
     Font font;
     if (!font.loadFromFile("MONSTER OF FANTASY.otf")) {
@@ -72,14 +80,28 @@ int main()
     subInsertionText.setString("Crear Ruta");
     subInsertionText.setCharacterSize(20);
     subInsertionText.setFillColor(Color::Black);
-    subInsertionText.setPosition(subInsertion.getPosition().x + 75, subInsertion.getPosition().y + 10);
+    subInsertionText.setPosition(subInsertion.getPosition().x + 20, subInsertion.getPosition().y + 10);
 
     Text subInsertionText1;
     subInsertionText1.setFont(font);
     subInsertionText1.setString("Crear Punto");
     subInsertionText1.setCharacterSize(20);
     subInsertionText1.setFillColor(Color::Black);
-    subInsertionText1.setPosition(subInsertion1.getPosition().x + 75, subInsertion1.getPosition().y + 10);
+    subInsertionText1.setPosition(subInsertion1.getPosition().x + 20, subInsertion1.getPosition().y + 10);
+
+    Text sub1InsertionText;
+    sub1InsertionText.setFont(font);
+    sub1InsertionText.setString("Por favor, introduce el \nnombre de tu ruta en la \nconsola\n");
+    sub1InsertionText.setCharacterSize(20);
+    sub1InsertionText.setFillColor(Color::Black);
+    sub1InsertionText.setPosition(sub1Insertion1.getPosition().x + 10, sub1Insertion1.getPosition().y + 5);
+
+    Text sub1InsertionText1;
+    sub1InsertionText1.setFont(font);
+    sub1InsertionText1.setString("Por favor, presiona con \nel mouse el punto que \ndeseas marcar");
+    sub1InsertionText1.setCharacterSize(20);
+    sub1InsertionText1.setFillColor(Color::Black);
+    sub1InsertionText1.setPosition(sub1Insertion1.getPosition().x + 10, sub1Insertion1.getPosition().y + 5);
 
     Text subEditionText;
     subEditionText.setFont(font);
@@ -152,11 +174,13 @@ int main()
             if (event.type == Event::MouseButtonPressed) {
                 if (event.mouseButton.button == Mouse::Left) {
                     Vector2i mousePos = Mouse::getPosition(window);
-                    if ((buttonInsertion || buttonEdition) && Back.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    if ((buttonInsertion || buttonEdition || subMenuInsertion || subMenuInsertion1) && Back.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                         button.play();
                         buttonMenu = true;
                         buttonEdition = false;
                         buttonInsertion = false;
+                        subMenuInsertion = false;
+                        subMenuInsertion1 = false;
                     }
                 }
 
@@ -170,6 +194,29 @@ int main()
                     }
                 }
 
+            }
+
+            if (event.type == Event::MouseButtonPressed) {
+                if (event.mouseButton.button == Mouse::Left) {
+                    Vector2i mousePos = Mouse::getPosition(window);
+                    if (buttonInsertion && subInsertion.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        printf("Por favor, introduce un nombre para la nueva ruta:\n");
+                        subMenuInsertion = true;
+                        buttonInsertion = false;
+                    }
+
+                }
+            }
+
+            if (event.type == Event::MouseButtonPressed) {
+                if (event.mouseButton.button == Mouse::Left) {
+                    Vector2i mousePos = Mouse::getPosition(window);
+                    if (buttonInsertion && subInsertion1.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        subMenuInsertion1 = true;
+                        buttonInsertion = false;
+                    }
+
+                }
             }
         }
         
@@ -185,6 +232,7 @@ int main()
             window.draw(Back1Text);
 
         }
+       
         if (buttonInsertion) {
             window.draw(subInsertion);
             window.draw(subInsertion1);
@@ -198,6 +246,20 @@ int main()
             window.draw(subEditionText);
             window.draw(Back);
             window.draw(BackText);
+        }
+        if (subMenuInsertion) {
+            window.draw(Back);
+            window.draw(BackText);
+            window.draw(sub1Insertion1);
+            window.draw(sub1InsertionText);
+
+        }
+        if (subMenuInsertion1) {
+            window.draw(Back);
+            window.draw(BackText);
+            window.draw(sub1Insertion1);
+            window.draw(sub1InsertionText1);
+
         }
 
         window.display();
