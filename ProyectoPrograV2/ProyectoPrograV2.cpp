@@ -4,6 +4,9 @@
 #include <SFML/Audio.hpp>
 #include "route.h"
 
+//Falta pedir nombre y que funcione
+//Ademas de el resto de cosas (linea curva, implementacion de archivos, etc)
+
 using namespace std;
 using namespace sf;
 
