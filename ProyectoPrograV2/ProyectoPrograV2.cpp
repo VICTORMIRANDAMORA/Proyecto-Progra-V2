@@ -2,17 +2,15 @@
 #include<stdio.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "route.h"
 
+using namespace std;
 using namespace sf;
 
-//dos botones menu principal: insercion (insertar una ruta) y edicion (editar una ruta)
-//cuatro botones menu insercion: crear ruta, crear punto, paleta de colores y tal vez uno para regresar al menu anterior
-//para botones de edición se ocuparían rutas ya hechas, una vez hayan rutas hechas, dos botones, para ruta y para punto (mayormente para borrar, al seleccionar se subraya de otro color)
-//no sean sapos xd  jodase
 
 int main()
 {
-    RenderWindow window(VideoMode(1080, 720), "SFML Image Example");
+    RenderWindow window(VideoMode(1080, 720), "Proyecto Rutas");
 
     Texture texture;
     if (!texture.loadFromFile("Chapter_5_Season_4_map_ReDimensioned.jpg")) {
@@ -20,6 +18,12 @@ int main()
     }
 
     Sprite sprite(texture);
+
+    List routeList;
+
+    string current = "Ruta de ejemplo";
+    routeList.addRoute(current);
+
     RectangleShape insertion(Vector2f(300, 50));
     insertion.setPosition(750, 330);
 
@@ -60,67 +64,40 @@ int main()
     if (!font.loadFromFile("MONSTER OF FANTASY.otf")) {
         return -1;
     }
-
-    Text InsertionText;
-    InsertionText.setFont(font);
-    InsertionText.setString("Insercion");
-    InsertionText.setCharacterSize(20);
+   
+    Text InsertionText("Insercion", font, 20);
     InsertionText.setFillColor(Color::Black);
     InsertionText.setPosition(insertion.getPosition().x + 100, insertion.getPosition().y + 10);
 
-    Text EditionText;
-    EditionText.setFont(font);
-    EditionText.setString("Edicion");
-    EditionText.setCharacterSize(20);
+    Text EditionText("Edicion", font, 20);
     EditionText.setFillColor(Color::Black);
     EditionText.setPosition(edition.getPosition().x + 110, edition.getPosition().y + 10);
 
-    Text subInsertionText;
-    subInsertionText.setFont(font);
-    subInsertionText.setString("Crear Ruta");
-    subInsertionText.setCharacterSize(20);
+    Text subInsertionText("Crear Ruta", font, 20);
     subInsertionText.setFillColor(Color::Black);
     subInsertionText.setPosition(subInsertion.getPosition().x + 20, subInsertion.getPosition().y + 10);
 
-    Text subInsertionText1;
-    subInsertionText1.setFont(font);
-    subInsertionText1.setString("Crear Punto");
-    subInsertionText1.setCharacterSize(20);
+    Text subInsertionText1("Crear Punto", font, 20);
     subInsertionText1.setFillColor(Color::Black);
     subInsertionText1.setPosition(subInsertion1.getPosition().x + 20, subInsertion1.getPosition().y + 10);
 
-    Text sub1InsertionText;
-    sub1InsertionText.setFont(font);
-    sub1InsertionText.setString("Por favor, introduce el \nnombre de tu ruta en la \nconsola\n");
-    sub1InsertionText.setCharacterSize(20);
+    Text sub1InsertionText("Por Favor, introduce el \nnombre de tu ruta en la \nconsola\n", font, 20);
     sub1InsertionText.setFillColor(Color::Black);
     sub1InsertionText.setPosition(sub1Insertion1.getPosition().x + 10, sub1Insertion1.getPosition().y + 5);
 
-    Text sub1InsertionText1;
-    sub1InsertionText1.setFont(font);
-    sub1InsertionText1.setString("Por favor, presiona con \nel mouse el punto que \ndeseas marcar");
-    sub1InsertionText1.setCharacterSize(20);
+    Text sub1InsertionText1("Por favor, presiona con el \nel mouse el punto que \ndeseas marcar", font, 20);
     sub1InsertionText1.setFillColor(Color::Black);
     sub1InsertionText1.setPosition(sub1Insertion1.getPosition().x + 10, sub1Insertion1.getPosition().y + 5);
 
-    Text subEditionText;
-    subEditionText.setFont(font);
-    subEditionText.setString("Selecciona una ruta");
-    subEditionText.setCharacterSize(20);
+    Text subEditionText("Selecciona una ruta", font, 20);
     subEditionText.setFillColor(Color::Black);
     subEditionText.setPosition(subEdition.getPosition().x + 45, subEdition.getPosition().y + 10);
 
-    Text BackText;
-    BackText.setFont(font);
-    BackText.setString("Regresar");
-    BackText.setCharacterSize(9);
+    Text BackText("Regresar", font, 9);
     BackText.setFillColor(Color::Black);
     BackText.setPosition(Back.getPosition().x + 2, Back.getPosition().y + 5);
 
-    Text Back1Text;
-    Back1Text.setFont(font);
-    Back1Text.setString("Salir");
-    Back1Text.setCharacterSize(10);
+    Text Back1Text("Salir", font, 10);
     Back1Text.setFillColor(Color::Black);
     Back1Text.setPosition(Back1.getPosition().x + 13, Back1.getPosition().y + 3);
 
@@ -146,7 +123,6 @@ int main()
             if (event.type == Event::Closed) {
                 window.close();
             }
-
 
             if (event.type == Event::MouseButtonPressed) {
                 if (event.mouseButton.button == Mouse::Left) {
@@ -190,6 +166,7 @@ int main()
                 if (event.mouseButton.button == Mouse::Left) {
                     Vector2i mousePos = Mouse::getPosition(window);
                     if (buttonMenu && Back1.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        button.play();
                         window.close();
                     }
                 }
@@ -200,18 +177,41 @@ int main()
                 if (event.mouseButton.button == Mouse::Left) {
                     Vector2i mousePos = Mouse::getPosition(window);
                     if (buttonInsertion && subInsertion.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                        printf("Por favor, introduce un nombre para la nueva ruta:\n");
+                        button.play();
                         subMenuInsertion = true;
-                        buttonInsertion = false;
+                        buttonInsertion = false;        
+                        cout << "Por favor, introduce un nombre para la nueva ruta:\n";
                     }
-
+                   
                 }
             }
+
+            if (event.type == Event::MouseButtonPressed) {
+                if (event.mouseButton.button == Mouse::Left && event.mouseButton.x < 720 && event.mouseButton.y < 720) {
+                    int x = event.mouseButton.x;
+                    int y = event.mouseButton.y;
+                    string pointName = "Punto " + to_string(x) + ", " + to_string(y);
+                    routeList.addPoint(current, pointName, x, y, "Rojo");
+                }
+            }
+
+            if (event.type == Event::MouseButtonPressed) {
+                if (event.mouseButton.button == Mouse::Right) {
+                    int x = event.mouseButton.x;
+                    int y = event.mouseButton.y;
+                    routeList.deleteNearPoint(x, y);
+                }
+            }
+            else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Delete) {
+                routeList.deleteRoute(current);
+            }
+           
 
             if (event.type == Event::MouseButtonPressed) {
                 if (event.mouseButton.button == Mouse::Left) {
                     Vector2i mousePos = Mouse::getPosition(window);
                     if (buttonInsertion && subInsertion1.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        button.play();
                         subMenuInsertion1 = true;
                         buttonInsertion = false;
                     }
@@ -230,7 +230,6 @@ int main()
             window.draw(EditionText);
             window.draw(Back1);
             window.draw(Back1Text);
-
         }
        
         if (buttonInsertion) {
@@ -252,6 +251,7 @@ int main()
             window.draw(BackText);
             window.draw(sub1Insertion1);
             window.draw(sub1InsertionText);
+           
 
         }
         if (subMenuInsertion1) {
@@ -262,7 +262,9 @@ int main()
 
         }
 
+        routeList.drawRoutes(window);
         window.display();
+
     }
 
     return 0;
