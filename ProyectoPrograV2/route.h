@@ -36,6 +36,8 @@ public:
 	void displayRoutes() const;
 	void drawRoutes(sf::RenderWindow& window) const;
 	void deleteNearPoint(int x, int y);
+	void saveRoutesToFiles(string name) const;
+	void loadRouteFromFiles(string name);
 	bool isEmpty() const { return routeHead == nullptr; }
 	~List();
 };

@@ -3,9 +3,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "route.h"
+#include"TextBox.h"
 
-//Falta pedir nombre y que funcione
+//Los nombres funionan, solo se debem guardar como los nombres de las listas o los puntos respectivamente
 //Ademas de el resto de cosas (linea curva, implementacion de archivos, etc)
+//Se intento implementar archivos, todavia le falta proceso
 
 using namespace std;
 using namespace sf;
@@ -24,85 +26,31 @@ int main()
 
     List routeList;
 
-    string current = "Ruta de ejemplo";
-    routeList.addRoute(current);
-
-    RectangleShape insertion(Vector2f(300, 50));
-    insertion.setPosition(750, 330);
-
-    RectangleShape edition(Vector2f(300, 50));
-    edition.setPosition(750, 390);
-
-    RectangleShape subInsertion(Vector2f(170, 50));
-    subInsertion.setPosition(725, 280);
-
-    RectangleShape subInsertion1(Vector2f(170, 50));
-    subInsertion1.setPosition(905, 280);
-
-    RectangleShape sub1Insertion1(Vector2f(300, 100));
-    sub1Insertion1.setPosition(750, 330);
-
-    RectangleShape subEdition(Vector2f(300, 50));
-    subEdition.setPosition(750, 330);
-
-    RectangleShape subEdition1(Vector2f(300, 50));
-    subEdition1.setPosition(750, 390);
+    string routeName;
+    string pointName;
 
     RectangleShape colorPalette(Vector2f(300, 50));
     colorPalette.setPosition(750, 660);
 
-    RectangleShape Back(Vector2f(50, 20));;
-    Back.setPosition(725, 5);
-
-    RectangleShape Back1(Vector2f(50, 20));;
-    Back1.setPosition(1025, 695);
-
     bool buttonMenu = true;
     bool buttonInsertion = false;
     bool buttonEdition = false;
-    bool subMenuInsertion = false;
-    bool subMenuInsertion1 = false;
 
     Font font;
     if (!font.loadFromFile("MONSTER OF FANTASY.otf")) {
         return -1;
     }
-   
-    Text InsertionText("Insercion", font, 20);
-    InsertionText.setFillColor(Color::Black);
-    InsertionText.setPosition(insertion.getPosition().x + 100, insertion.getPosition().y + 10);
 
-    Text EditionText("Edicion", font, 20);
-    EditionText.setFillColor(Color::Black);
-    EditionText.setPosition(edition.getPosition().x + 110, edition.getPosition().y + 10);
+    TextBox routeNameInput(font, Vector2f(750, 160), Vector2f(300, 50));
+    TextBox pointNameInput(font, Vector2f(750, 220), Vector2f(300, 50));
 
-    Text subInsertionText("Crear Ruta", font, 20);
-    subInsertionText.setFillColor(Color::Black);
-    subInsertionText.setPosition(subInsertion.getPosition().x + 20, subInsertion.getPosition().y + 10);
+    TextBox Insertion(font, Vector2f(750, 330), Vector2f(300, 50));
+    TextBox Edition(font, Vector2f(750, 390), Vector2f(300, 50));
+    TextBox Route(font, Vector2f(750, 40), Vector2f(300, 100));;
+    TextBox Back(font, Vector2f(725, 5), Vector2f(50, 20));
+    TextBox Exit(font, Vector2f(1025, 5), Vector2f(50, 20));
+    TextBox Edit(font, Vector2f(750, 330), Vector2f(300, 50));
 
-    Text subInsertionText1("Crear Punto", font, 20);
-    subInsertionText1.setFillColor(Color::Black);
-    subInsertionText1.setPosition(subInsertion1.getPosition().x + 20, subInsertion1.getPosition().y + 10);
-
-    Text sub1InsertionText("Por Favor, introduce el \nnombre de tu ruta en la \nconsola\n", font, 20);
-    sub1InsertionText.setFillColor(Color::Black);
-    sub1InsertionText.setPosition(sub1Insertion1.getPosition().x + 10, sub1Insertion1.getPosition().y + 5);
-
-    Text sub1InsertionText1("Por favor, presiona con el \nel mouse el punto que \ndeseas marcar", font, 20);
-    sub1InsertionText1.setFillColor(Color::Black);
-    sub1InsertionText1.setPosition(sub1Insertion1.getPosition().x + 10, sub1Insertion1.getPosition().y + 5);
-
-    Text subEditionText("Selecciona una ruta", font, 20);
-    subEditionText.setFillColor(Color::Black);
-    subEditionText.setPosition(subEdition.getPosition().x + 45, subEdition.getPosition().y + 10);
-
-    Text BackText("Regresar", font, 9);
-    BackText.setFillColor(Color::Black);
-    BackText.setPosition(Back.getPosition().x + 2, Back.getPosition().y + 5);
-
-    Text Back1Text("Salir", font, 10);
-    Back1Text.setFillColor(Color::Black);
-    Back1Text.setPosition(Back1.getPosition().x + 13, Back1.getPosition().y + 3);
 
     Music music;
     if (!music.openFromFile("20240226_Fortnite Lobby Classic Lobby Music.ogg")) {
@@ -127,10 +75,45 @@ int main()
                 window.close();
             }
 
+            routeNameInput.handleInput(event);
+            pointNameInput.handleInput(event);
+            Insertion.handleOutput(event, "Insercion", 20);
+            Edition.handleOutput(event, "Edicion", 20);
+            Route.handleOutput(event, "Por favor, ingresa \nel nombre de la ruta", 20);
+            Back.handleOutput(event, "Regresar", 9);
+            Exit.handleOutput(event, "Salir", 10);
+            Edit.handleOutput(event, "Selecciona una ruta", 20);
+            
+
+
             if (event.type == Event::MouseButtonPressed) {
                 if (event.mouseButton.button == Mouse::Left) {
                     Vector2i mousePos = Mouse::getPosition(window);
-                    if (buttonMenu && insertion.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    if (routeNameInput.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        routeNameInput.setSelected(true);
+                    }
+                    else {
+                        routeNameInput.setSelected(false);
+                    }
+                }
+            }
+
+            if (event.type == Event::MouseButtonPressed) {
+                if (event.mouseButton.button == Mouse::Left) {
+                    Vector2i mousePos = Mouse::getPosition(window);
+                    if (pointNameInput.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        pointNameInput.setSelected(true);
+                    }
+                    else {
+                        pointNameInput.setSelected(false);
+                    }
+                }
+            }
+
+            if (event.type == Event::MouseButtonPressed) {
+                if (event.mouseButton.button == Mouse::Left) {
+                    Vector2i mousePos = Mouse::getPosition(window);
+                    if (buttonMenu && Insertion.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                         button.play();
                         buttonMenu = false;
                         buttonInsertion = true;
@@ -141,7 +124,7 @@ int main()
             if (event.type == Event::MouseButtonPressed) {
                 if (event.mouseButton.button == Mouse::Left) {
                     Vector2i mousePos = Mouse::getPosition(window);
-                    if (buttonMenu && edition.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    if (buttonMenu && Edition.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                         button.play();
                         buttonMenu = false;
                         buttonEdition = true;
@@ -153,13 +136,11 @@ int main()
             if (event.type == Event::MouseButtonPressed) {
                 if (event.mouseButton.button == Mouse::Left) {
                     Vector2i mousePos = Mouse::getPosition(window);
-                    if ((buttonInsertion || buttonEdition || subMenuInsertion || subMenuInsertion1) && Back.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    if ((buttonInsertion || buttonEdition) && Back.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                         button.play();
                         buttonMenu = true;
                         buttonEdition = false;
                         buttonInsertion = false;
-                        subMenuInsertion = false;
-                        subMenuInsertion1 = false;
                     }
                 }
 
@@ -168,7 +149,7 @@ int main()
             if (event.type == Event::MouseButtonPressed) {
                 if (event.mouseButton.button == Mouse::Left) {
                     Vector2i mousePos = Mouse::getPosition(window);
-                    if (buttonMenu && Back1.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    if (buttonMenu && Exit.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                         button.play();
                         window.close();
                     }
@@ -177,24 +158,12 @@ int main()
             }
 
             if (event.type == Event::MouseButtonPressed) {
-                if (event.mouseButton.button == Mouse::Left) {
-                    Vector2i mousePos = Mouse::getPosition(window);
-                    if (buttonInsertion && subInsertion.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                        button.play();
-                        subMenuInsertion = true;
-                        buttonInsertion = false;        
-                        cout << "Por favor, introduce un nombre para la nueva ruta:\n";
-                    }
-                   
-                }
-            }
-
-            if (event.type == Event::MouseButtonPressed) {
-                if (event.mouseButton.button == Mouse::Left && event.mouseButton.x < 720 && event.mouseButton.y < 720) {
+                if (buttonInsertion && event.mouseButton.button == Mouse::Left && event.mouseButton.x < 720 && event.mouseButton.y < 720) {
                     int x = event.mouseButton.x;
                     int y = event.mouseButton.y;
-                    string pointName = "Punto " + to_string(x) + ", " + to_string(y);
-                    routeList.addPoint(current, pointName, x, y, "Rojo");
+                    pointName = pointNameInput.getText();
+                    routeList.addPoint(routeName, pointName, x, y, "Rojo");
+                    cout << "Se anadio el punto " << pointName << " a la ruta " << routeName << "\n";
                 }
             }
 
@@ -205,21 +174,8 @@ int main()
                     routeList.deleteNearPoint(x, y);
                 }
             }
-            else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Delete) {
-                routeList.deleteRoute(current);
-            }
-           
-
-            if (event.type == Event::MouseButtonPressed) {
-                if (event.mouseButton.button == Mouse::Left) {
-                    Vector2i mousePos = Mouse::getPosition(window);
-                    if (buttonInsertion && subInsertion1.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                        button.play();
-                        subMenuInsertion1 = true;
-                        buttonInsertion = false;
-                    }
-
-                }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Delete) {
+                routeList.deleteRoute(routeName);
             }
         }
         
@@ -227,42 +183,22 @@ int main()
         window.draw(sprite);
 
         if (buttonMenu) {
-            window.draw(insertion);
-            window.draw(InsertionText);
-            window.draw(edition);
-            window.draw(EditionText);
-            window.draw(Back1);
-            window.draw(Back1Text);
+            Insertion.draw(window);
+            Edition.draw(window);
+            Exit.draw(window);
         }
        
         if (buttonInsertion) {
-            window.draw(subInsertion);
-            window.draw(subInsertion1);
-            window.draw(subInsertionText);
-            window.draw(subInsertionText1);
-            window.draw(Back);
-            window.draw(BackText);
+            Route.draw(window);
+            routeNameInput.draw(window);
+            routeName = routeNameInput.getText();
+            routeList.addRoute(routeName);
+            pointNameInput.draw(window);
+            Back.draw(window);
         }
         if (buttonEdition) {
-            window.draw(subEdition);
-            window.draw(subEditionText);
-            window.draw(Back);
-            window.draw(BackText);
-        }
-        if (subMenuInsertion) {
-            window.draw(Back);
-            window.draw(BackText);
-            window.draw(sub1Insertion1);
-            window.draw(sub1InsertionText);
-           
-
-        }
-        if (subMenuInsertion1) {
-            window.draw(Back);
-            window.draw(BackText);
-            window.draw(sub1Insertion1);
-            window.draw(sub1InsertionText1);
-
+            Edit.draw(window);
+            Back.draw(window);
         }
 
         routeList.drawRoutes(window);

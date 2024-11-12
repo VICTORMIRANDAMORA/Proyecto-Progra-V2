@@ -1,6 +1,7 @@
 #include "route.h"
 #include<iostream>
 #include<SFML/Graphics.hpp>
+#include<fstream>
 
 using namespace std;
 using namespace sf;
@@ -132,6 +133,51 @@ void List::deleteNearPoint(int x, int y) {
 	}
 	if (closestPoint && closestRoute) {
 		deletePoint(closestRoute->routeName, closestPoint->name);
+	}
+	else {
+		cout << "No se encontro ningun punto a eliminar\n";
+	}
+}
+
+void List::saveRoutesToFiles(string name) const {
+	Route* currentRoute = routeHead;
+	while (currentRoute) {
+		string filename = "ruta_" + name + ".txt";
+		ofstream outFile(filename);
+		if (outFile.is_open()) {
+			outFile << currentRoute->routeName << "\n";
+			TourPoint* currentPoint = currentRoute->pointHead;
+			while (currentPoint) {
+				outFile << currentPoint->name << " " << currentPoint->x << " " << currentPoint->y << " " << currentPoint->color << "\n";
+				currentPoint = currentPoint->next;
+			}
+			outFile.close();
+		}
+		else {
+			cerr << "Error al abrir el archivo " << filename << " para escritura.\n";
+		}
+		currentRoute = currentRoute->next;
+	}
+}
+
+void List::loadRouteFromFiles(string name) {
+	for (int i = 1; ; i++) {
+		string filename = "ruta_" + name + ".txt";
+		ifstream inFile(filename);
+		if (!inFile.is_open()) {
+			break;
+		}
+		string routeName;
+		getline(inFile, routeName);
+		addRoute(routeName);
+
+		string pointName;
+		int x, y;
+		string color;
+		while (inFile >> pointName >> x >> y >> color) {
+			addPoint(routeName, pointName, x, y, color);
+		}
+		inFile.close();
 	}
 }
 
