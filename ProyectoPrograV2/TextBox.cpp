@@ -1,5 +1,9 @@
+#include<iostream>
 #include "TextBox.h"
 #include<SFML/Graphics.hpp>
+
+using namespace std;
+using namespace sf;
 
 TextBox::TextBox(Font& font, const Vector2f& position, const Vector2f& size) {
 	box.setSize(size);
@@ -17,6 +21,9 @@ TextBox::TextBox(Font& font, const Vector2f& position, const Vector2f& size) {
 
 void TextBox::handleInput(Event& event) {
 	if (event.type == Event::TextEntered && isSelected) {
+		if (text.getString().isEmpty() && event.text.unicode == 8) {
+			cerr << "Por favor, ingresa un valor";
+		}
 		if (event.text.unicode == 8 && !text.getString().isEmpty()) {
 			string str = text.getString();
 			str.pop_back();

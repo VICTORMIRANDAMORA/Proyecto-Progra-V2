@@ -6,6 +6,7 @@
 using namespace std;
 using namespace sf;
 
+
 void List::addRoute(string& _name) {
 	Route* newRoute = new Route(_name);
 	if (!routeHead) {
@@ -49,7 +50,7 @@ void List::addPoint(string& _name, string& _point, int x, int y, const string& _
 			temp = temp->next;
 		}
 		temp->next = newPoint;
-		newPoint->prev = temp;
+		newPoint->prev = temp;	
 	}
 }
 
@@ -83,27 +84,65 @@ void List::displayRoutes() const {
 	}
 }
 
-
 void List::drawRoutes(sf::RenderWindow& window) const {
-	Route* route = routeHead;
-	while (route) {
-		TourPoint* point = route->pointHead;
-		TourPoint* prevPoint = nullptr;
-		while (point) {
+	Route* currentRoute = routeHead;
+	while (currentRoute) {
+		TourPoint* temp = currentRoute->pointHead;
+		if (temp && temp->next) {
+			const int segments = 40;
+			const float thickness = 50.0f;
+
+			while (temp->next) {
+				TourPoint* next = temp->next;
+				for (float offset = -thickness / 2; offset <= thickness / 2; offset += 1.0f) {
+					VertexArray neat(LinesStrip, segments + 1);
+
+					for (int i = 0; i < segments; i++) {
+						float t = i / static_cast<float>(segments);
+						float t1 = t * t;
+						float t2 = t1 * t;
+						Vector2f interpolationPos((2 * t2 - 3 * t1 + 1) * temp->x + (t2 - 2 * t1 + t) * (temp->x + 60 + offset) +
+							(-2 * t2 + 3 * t1) * next->x + (t2 - t1) * ( next->x - 60 + offset),
+
+							(2 * t2 - 3 * t1 + 1) * temp->y + (t2 - 2 * t1 + t) * (temp->y + 60 + offset) +
+							(-2 * t2 + 3 * t1) * next->y + (t2 - t1) * (next->y - 60 + offset)
+						);
+
+						neat[i].position = interpolationPos;
+						neat[i].color = Color::Blue;
+					}
+					window.draw(neat);
+				}
+				temp = temp->next;
+			}
+		}
+
+		temp = currentRoute->pointHead;
+		while (temp) {
 			CircleShape circle(5);
-			circle.setPosition(point->x - 5, point->y - 5);
+			circle.setOrigin(2, 2);
+			circle.setPosition(Vector2f(temp->x,temp->y));
 			circle.setFillColor(Color::Red);
 			window.draw(circle);
-			if (prevPoint) {
-				Vertex line[] = {
-					Vertex(Vector2f(prevPoint->x, prevPoint->y), Color::Blue),Vertex(Vector2f(point->x,point->y),Color::Blue)
-				};
-				window.draw(line, 2, Lines);
+
+			Font font;
+			if (!font.loadFromFile("MONSTER OF FANTASY.otf")) {
+				cerr << "No se pudo cargar la fuente" << endl;
 			}
-			prevPoint = point;
-			point = point->next;
+
+			Text Label(temp->name, font, 10);
+			Label.setPosition(temp->x + 7, temp->y);
+			Label.setFillColor(Color::White);
+
+			RectangleShape LabelBox(Vector2f(30, 15));
+			LabelBox.setFillColor(Color(0, 0, 0, 150));
+			LabelBox.setPosition(temp->x + 10, temp->y);
+			window.draw(LabelBox);
+			window.draw(Label);
+
+			temp = temp->next;
 		}
-		route = route->next;
+		currentRoute = currentRoute->next;
 	}
 }
 
@@ -165,7 +204,7 @@ void List::loadRouteFromFiles(string name) {
 		string filename = "ruta_" + name + ".txt";
 		ifstream inFile(filename);
 		if (!inFile.is_open()) {
-			break;
+			cerr << "Ha ocurrido un error\n";
 		}
 		string routeName;
 		getline(inFile, routeName);
@@ -177,7 +216,9 @@ void List::loadRouteFromFiles(string name) {
 		while (inFile >> pointName >> x >> y >> color) {
 			addPoint(routeName, pointName, x, y, color);
 		}
+		displayRoutes();
 		inFile.close();
+
 	}
 }
 
@@ -195,3 +236,5 @@ List::~List() {
 		currentRoute = nextRoute;
 	}
 }
+
+

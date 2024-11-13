@@ -1,2 +1,17 @@
-﻿  ProyectoPrograV2.cpp
+﻿  route.cpp
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(124,44): warning C4244: 'argumento': conversión de 'int' a 'T'; posible pérdida de datos
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(124,44): warning C4244:         with
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(124,44): warning C4244:         [
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(124,44): warning C4244:             T=float
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(124,44): warning C4244:         ]
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(124,36): warning C4244: 'argumento': conversión de 'int' a 'T'; posible pérdida de datos
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(124,36): warning C4244:         with
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(124,36): warning C4244:         [
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(124,36): warning C4244:             T=float
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(124,36): warning C4244:         ]
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(134,39): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(134,30): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(139,43): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(139,33): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\route.cpp(163,26): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
   ProyectoPrograV2.vcxproj -> D:\GitHub\Proyecto-Progra-V2\Proyecto-Progra-V2\ProyectoPrograV2\x64\Debug\ProyectoPrograV2.exe
